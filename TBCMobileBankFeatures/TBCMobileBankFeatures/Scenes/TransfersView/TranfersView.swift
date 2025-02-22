@@ -15,13 +15,10 @@ struct TransfersView: View {
     var body: some View {
         NavigationStack {
             List {
-                // Group items by date
                 ForEach(Dictionary(grouping: items.filter { item in
-                    // Apply filtering to items
                     searchText.isEmpty || item.title.lowercased().contains(searchText.lowercased())
                 }, by: { Calendar.current.startOfDay(for: $0.date) }).keys.sorted(), id: \.self) { date in
                     Section(header: Text(date, style: .date)) {
-                        // Filter items by date within each section
                         ForEach(items.filter { Calendar.current.isDate($0.date, inSameDayAs: date) && (searchText.isEmpty || $0.title.lowercased().contains(searchText.lowercased())) }) { item in
                             NavigationLink(destination: DetailView(item: item)) {
                                 TransferRowView(item: item)

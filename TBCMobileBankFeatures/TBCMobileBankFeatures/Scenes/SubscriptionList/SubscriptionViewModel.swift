@@ -11,7 +11,7 @@ class SubscriptionViewModel: ObservableObject {
     @Published var subscriptions: [CardSubscription] = []
 
     func fetchSubscriptions(userId: Int) {
-        guard let url = URL(string: "https://api.dev.x.devops-ninja.me/Card/?user_id=\(userId)") else {
+        guard let url = URL(string: "https://api.dev.x.devops-ninja.me/Card/?user=\(userId)") else {
             print("Invalid URL")
             return
         }
@@ -23,9 +23,7 @@ class SubscriptionViewModel: ObservableObject {
             }
 
             if let httpResponse = response as? HTTPURLResponse {
-                print("HTTP Status Code: \(httpResponse.statusCode)")
                 if httpResponse.statusCode != 200 {
-                    print("API Request failed with status code: \(httpResponse.statusCode)")
                     return
                 }
             }
@@ -36,9 +34,8 @@ class SubscriptionViewModel: ObservableObject {
             }
 
             do {
-                let jsonString = String(data: data, encoding: .utf8)
-                print("Raw JSON Response: \(jsonString ?? "Invalid JSON")") // Debugging
-                
+                _ = String(data: data, encoding: .utf8)
+
                 let decodedData = try JSONDecoder().decode([CardSubscription].self, from: data)
                 DispatchQueue.main.async {
                     self.subscriptions = decodedData
@@ -63,7 +60,7 @@ class SubscriptionViewModel: ObservableObject {
             "subscriber_account": subscriberAccount,
             "pay_day": payDay ?? NSNull(),
             "is_subscribe": isSubscribe,
-            "end_date": formatDateToString(date: endDate), // Convert Date to String
+            "end_date": formatDateToString(date: endDate),
             "is_active": isActive
         ]
         
@@ -89,35 +86,7 @@ class SubscriptionViewModel: ObservableObject {
 
     func formatDateToString(date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd" // Formatting the date to match the API requirement
+        formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: date)
     }
-    
-//    func deleteSubscription(_ subscription: CardSubscription) {
-//        guard let url = URL(string: "https://api.dev.x.devops-ninja.me/Card/\(subscription.id)") else {
-//            print("Invalid URL")
-//            return
-//        }
-//        
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "DELETE"  // HTTP DELETE method
-//        
-//        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-//            if let error = error {
-//                print("Error deleting subscription: \(error.localizedDescription)")
-//                return
-//            }
-//            
-//            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-//                DispatchQueue.main.async {
-//                    // Update your subscriptions array to reflect the deletion
-//                    if let index = self?.subscriptions.firstIndex(where: { $0.id == subscription.id }) {
-//                        self?.subscriptions.remove(at: index)
-//                    }
-//                }
-//            } else {
-//                print("Failed to delete subscription")
-//            }
-//        }.resume()
-//    }
 }

@@ -37,18 +37,10 @@ struct SubscriptionList: View {
             .listStyle(.inset)
             .scrollContentBackground(.hidden)
             .background(Color("backgroundColor"))
-            .navigationTitle("Subscriptions")
+            .navigationTitle("გამოწერილები")
             .onAppear {
                 viewModel.fetchSubscriptions(userId: 2)
             }
-        }
-    }
-    
-    private func deleteSubscription(at offsets: IndexSet) {
-        // Delete subscription from the list and your data source
-        for index in offsets {
-            let subscription = viewModel.subscriptions[index]
-            viewModel.deleteSubscription(subscription)
         }
     }
 }

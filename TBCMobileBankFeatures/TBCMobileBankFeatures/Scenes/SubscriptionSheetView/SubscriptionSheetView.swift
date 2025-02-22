@@ -11,8 +11,8 @@ struct SubscriptionSheetView: View {
     @State private var subscriptionName: String = ""
     @State private var endDate = Date()
     @State private var isActive = false
-    @State private var payDay: Int? = nil // Default is nil
-    @State private var shouldAddMonth = false  // Flag to control whether to add a month
+    @State private var payDay: Int? = nil
+    @State private var shouldAddMonth = false
     
     var viewModel: SubscriptionViewModel
     
@@ -34,22 +34,18 @@ struct SubscriptionSheetView: View {
                 
                 Spacer()
                 
-                DatePicker("End Date", selection: $endDate, displayedComponents: .date)
+                DatePicker("გამორთვის ვადა:", selection: $endDate, displayedComponents: .date)
                     .padding()
                     .accentColor(.blue)
                     .cornerRadius(50)
                 
-                Toggle("Add 1 Month to End Date", isOn: $shouldAddMonth)
-                    .padding()
-                
                 Toggle(isOn: $isActive) {
-                    Text("Active")
+                    Text("აქტიურია ?")
                         .font(.headline)
                 }
                 .padding()
                 
                 Button {
-                    // Send data only if it's needed
                     viewModel.addSubscription(
                         userId: 2,
                         subscriberName: subscriptionName,
@@ -74,6 +70,6 @@ struct SubscriptionSheetView: View {
     }
 }
 
-//#Preview {
-//    SubscriptionSheetView(viewModel: <#SubscriptionViewModel#>)
-//}
+#Preview {
+    SubscriptionSheetView(viewModel: SubscriptionViewModel())
+}
